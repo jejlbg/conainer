@@ -13,3 +13,13 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     password = Column(String)
     is_active = Column(Boolean, default=True)
+
+# Class for sqlalchemy to create db tables named "login"
+class Login(Base):
+    __tablename__="login"
+
+    id = Column(Integer, primary_key=True, index=True)
+    ip = Column(String, index=True)
+    location = Column(JSON, index=True)
+    login_time = Column(String)
+    user_id = Column(Integer, ForeignKey("users.id"))

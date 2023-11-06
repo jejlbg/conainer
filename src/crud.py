@@ -4,6 +4,8 @@ from sqlalchemy import MetaData, Table
 from fastapi import HTTPException
 import models, schemas, database
 import bcrypt
+from datetime import datetime
+import socket
 
 # method to delete the table "users"
 def delete_users(db: Session):
@@ -62,3 +64,35 @@ def update_user_by_username(db: Session, username: str, updated_data: schemas.Us
         return db_user
     else:
         raise HTTPException(status_code=404, detail="User not found")
+
+# method to create a login entry into table "login"
+def create_login(db: Session, login: schemas.LoginCreate, owner_id: int, location: dict):
+    now = datetime.now()
+    current_date = now
+    hostname=socket.gethostname() 
+    IPAddr=socket.gethostbyname(hostname)
+    db_login = models.Login(
+        login_time=current_date, 
+        location=location,
+        user_id=owner_id
+    )
+    db.add(db_login)
+    db.commit()
+    db.refresh(db_login)
+    return db_login
+
+# method to return all logins in table "login" (max. 100 entries)
+def get_logins(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Login).offset(skip).limit(limit).all()
+
+# method to return all logins of a user in table "login"
+def get_logins_by_user_id(db: Session, owner_id: int):
+    return db.query(models.Login).filter(models.Login.user_id == owner_id).all()
+
+# method to validate login
+def check_login(db: Session, user: schemas.User, pw: str):
+    pass
+
+# method to return login by userid of a user in table "login"
+def get_logins_by_user_id(db: Session, owner_id: int):
+    return db.query(models.Login).filter(models.Login.user_id == owner_id).all()

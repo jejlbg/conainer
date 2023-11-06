@@ -1,7 +1,7 @@
 <template>
     <div class="login-container">
         <div class="animated-background"></div>
-        <div class="title-container">Social Media Projekt</div>
+        <div class="title-container">Deep Learning Project</div>
         <div class="form-container">
             <h1>{{ showRegister ? "Registrieren" : "Login" }}</h1>
             <form v-if="!showRegister" id="login-form">

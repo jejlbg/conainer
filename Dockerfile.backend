@@ -1,0 +1,21 @@
+# Use an official Python 3.9 base image
+FROM python:3.9
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Set the PYTHONPATH to the directory containing your Python modules
+ENV PYTHONPATH /app/src
+
+# Copy the application dependencies into the container
+COPY requirements.txt .
+
+# Install the dependencies
+RUN pip install -r requirements.txt
+
+# Copy the rest of the application into the container
+COPY . /app
+
+# Set the command to run your FastAPI application with Uvicorn
+CMD ["uvicorn", "main:app", "--reload"]
+

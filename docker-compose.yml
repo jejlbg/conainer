@@ -1,0 +1,17 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "8080:8080"  # Expose the Vue.js application on port 8080
+    depends_on:
+      - backend  # Wait for the backend to be up
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8000:8000"  # Expose the FastAPI application on port 8000

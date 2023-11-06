@@ -1,0 +1,20 @@
+# Use an official Node.js base image
+FROM node:14
+
+# Set the working directory inside the container
+WORKDIR /app/vue
+
+# Copy your Vue.js project into the container
+COPY . .
+
+# Install project dependencies
+RUN npm install
+
+# Build your Vue.js application
+RUN npm run build
+
+# Expose the port (if needed)
+# EXPOSE 8080
+
+# Define the command to start the Vue.js application
+CMD ["npx", "serve", "-s", "dist"]

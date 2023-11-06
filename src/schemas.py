@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 
@@ -24,3 +25,23 @@ class UserUpdate(BaseModel):
 class PasswordUpdate(BaseModel):
     current_password: str
     new_password: str
+
+class LoginBase(BaseModel):
+    login_time: str
+    ip: str
+    location: str
+
+class LoginCreate(LoginBase):
+    pass
+
+class Login(LoginBase):
+    id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
+        
+class LoginRequest(BaseModel):
+    user: str
+    password: str
+    location: Optional[dict]

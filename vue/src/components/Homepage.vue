@@ -1,6 +1,5 @@
 <template>
     <div class="test">
-        HELLO WORLD!
         <div>{{ username }}</div>
     </div>
 </template>
