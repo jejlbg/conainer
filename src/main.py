@@ -11,7 +11,6 @@ models.Base.metadata.create_all(bind=engine)
 # Create instance of FastAPI
 app = FastAPI()
 
-
 # Configure CORS settings
 origins = ["http://localhost:8080"]  # Replace with the origins you want to allow
 
@@ -31,6 +30,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+@app.get("/", response_model=list[schemas.User])
+def read_users(query: str = '', limit: int = 100, db: Session = Depends(get_db)):
+    users = crud.get_users(db, query=query, limit=limit)
+    return users
 
 # post method to delete table "users"
 @app.post("/deleteUsers/")
