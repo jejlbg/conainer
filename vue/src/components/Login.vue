@@ -50,19 +50,33 @@ export default {
     methods: {
         // method to call api route to create a new user in the database
         async register_new_user() {
-            if (this.showRegister && this.repeat_password === this.password) {
-                try {
-                    const response = await axios.post(
-                        this.$store.state.API + "/createUser",
-                        {
-                            email: this.email,
-                            username: this.username,
-                            password: this.password,
-                        }
-                    );
-                    console.log(response.status);
-                    this.showSuccess();
-                } catch {
+            if (this.showRegister) {
+                if (this.repeat_password === this.password) {
+                    try {
+                        const response = await axios.post(
+                            this.$store.state.API + "/createUser",
+                            {
+                                email: this.email,
+                                username: this.username,
+                                password: this.password,
+                            }
+                        );
+                        console.log(response.status);
+                        this.showSuccess();
+                    } catch (error) {
+                        console.log(error)
+
+                        Swal.fire({
+                            title: "Fehler beim Registrieren",
+                            text: "Username bereits belegt",
+                            icon: "info",
+                            iconColor: "#d0342c",
+                            showCloseButton: false,
+                            confirmButtonText: "Schließen",
+                            confirmButtonColor: "#d0342c",
+                        });
+                    }
+                } else {
                     Swal.fire({
                         title: "Fehler beim Registrieren",
                         text: "Bitte versuche es noch einmal und gib zweimal das gleiche Passwort ein :)",

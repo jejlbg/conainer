@@ -3,12 +3,25 @@ from sqlalchemy.orm import Session
 import crud, models, schemas
 from database import SessionLocal, engine
 import bcrypt
+from fastapi.middleware.cors import CORSMiddleware
 
 # Create tables in the database based on the model definitions
 models.Base.metadata.create_all(bind=engine)
 
 # Create instance of FastAPI
 app = FastAPI()
+
+
+# Configure CORS settings
+origins = ["http://localhost:8080"]  # Replace with the origins you want to allow
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # DB Dependency
 def get_db():
@@ -38,9 +51,12 @@ def delete_user(username: str, db: Session = Depends(get_db)):
 # post method to create a user into table "users"
 @app.post("/createUser/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_email(db, email=user.email)
-    if db_user:
+    db_user_email = crud.get_user_by_email(db, email=user.email)
+    db_user_username = crud.get_user_by_username(db, username = user.username)
+    if db_user_email:
         raise HTTPException(status_code=400, detail="Email already registered")
+    if db_user_username:
+        raise HTTPException(status_code=400, detail="Username already registered")
     return crud.create_user(db=db, user=user)
 
 @app.get("/get_user/{username}")
